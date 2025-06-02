@@ -1,0 +1,13 @@
+body {
+  background-color: black;
+  margin: 0;
+  padding: 0;
+}
+
+#player {
+  width: 8%;
+  height: auto;
+  position: fixed;
+  bottom: 0px;
+  left: 46%;
+}
