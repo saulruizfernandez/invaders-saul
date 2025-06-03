@@ -1,3 +1,5 @@
+// 00ff1a -> color of green
+
 export class Player {
   constructor(
     speed = 5,
@@ -5,8 +7,8 @@ export class Player {
     pos_x = 570,
     lifes = 3,
     img_src = "sprites/player_sprite.png",
-    width = 60,
-    height = 60
+    width = 96,
+    height = 51
   ) {
     this.speed = speed;
     this.mov_x = mov_x;
