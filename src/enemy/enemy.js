@@ -1,10 +1,19 @@
 class Enemy {
-  constructor(points, img_src = null, width = 96, height = 51) {
+  constructor(
+    points,
+    img_src = null,
+    width = 96,
+    height = 51,
+    pos_x = 0,
+    pos_y = 0
+  ) {
     this.points = points;
     this.sprite = new Image();
     this.sprite.src = img_src;
     this.width = width;
     this.height = height;
+    this.pos_x = pos_x;
+    this.pos_y = pos_y;
   }
   set_img_src(img_src) {
     this.sprite.src = img_src;
@@ -14,6 +23,9 @@ class Enemy {
   }
   set_height(height) {
     this.height = height;
+  }
+  show(ctx) {
+    ctx.drawImage(this.sprite, this.pos_x, this.pos_y, this.width, this.height);
   }
 }
 
@@ -36,7 +48,28 @@ export class EnemyOvni extends Enemy {
   move() {
     this.pos_x += this.speed_x;
   }
-  show(ctx) {
-    ctx.drawImage(this.sprite, this.pos_x, this.pos_y, this.width, this.height);
+}
+
+export class Enemy1 extends Enemy {
+  constructor(points = 50, img_src, width = 102, height = 44, pos_x, pos_y) {
+    super(points, img_src, width, height, pos_x, pos_y);
+    this.pos_x = pos_x;
+    this.pos_y = pos_y;
+  }
+}
+
+export class Enemy2 extends Enemy {
+  constructor(points = 30, img_src, width = 102, height = 44, pos_x, pos_y) {
+    super(points, img_src, width, height, pos_x, pos_y);
+    this.pos_x = pos_x;
+    this.pos_y = pos_y;
+  }
+}
+
+export class Enemy3 extends Enemy {
+  constructor(points = 10, img_src, width = 102, height = 44, pos_x, pos_y) {
+    super(points, img_src, width, height, pos_x, pos_y);
+    this.pos_x = pos_x;
+    this.pos_y = pos_y;
   }
 }
