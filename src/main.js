@@ -19,6 +19,9 @@ let directionMatrix = 1;
 let old_enemy_step_time = new Date().getTime();
 let skin = 1;
 
+// Enemies killed
+let enemies_killed = [];
+
 document.fonts.ready.then(() => {
   function update() {
     player.enable_move(keys);
@@ -26,7 +29,17 @@ document.fonts.ready.then(() => {
     ctx.clearRect(0, 0, canvas.width, canvas.height); // Refresh screen
     player.show(ctx);
     scene.enable_ovni(ctx, canvas.width);
-    scene.enable_player_projectile_interaction(ctx);
+    scene.enable_player_projectile_interaction(
+      ctx,
+      enemyMatrix,
+      enemies_killed
+    );
+    for (let i = 0; i < enemies_killed.length; i++) {
+      if (new Date().getTime() - enemies_killed[i][2] > 100) {
+        enemyMatrix.matrix[enemies_killed[i][0]][enemies_killed[i][1]] = "k";
+        enemies_killed.splice(i, 1);
+      }
+    }
     scene.enable_explotion_ovni();
     scene.update_score(ctx);
     enemyMatrix.update(ctx);

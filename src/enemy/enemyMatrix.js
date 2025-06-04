@@ -3,11 +3,11 @@ import { Enemy1, Enemy2, Enemy3 } from "./enemy.js";
 export class EnemyMatrix {
   constructor(row_spacing = 70, col_spacing = 100) {
     this.matrix = [
-      "aaaaaaaaaa",
-      "bbbbbbbbbb",
-      "bbbbbbbbbb",
-      "cccccccccc",
-      "cccccccccc",
+      "aaaaaaaaaa".split(""),
+      "bbbbbbbbbb".split(""),
+      "bbbbbbbbbb".split(""),
+      "cccccccccc".split(""),
+      "cccccccccc".split(""),
     ];
     this.enemy_matrix = [
       [null, null, null, null, null, null, null, null, null, null],
@@ -77,6 +77,7 @@ export class EnemyMatrix {
             this.enemy_matrix[i][j] = null;
             break;
           default:
+            this.enemy_matrix[i][j].show(ctx);
             break;
         }
         this.col += this.col_spacing;
