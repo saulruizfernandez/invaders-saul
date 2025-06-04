@@ -31,6 +31,7 @@ export class EnemyOvni extends Enemy {
     this.pos_x = this.direction == 0 ? -102 : 1200;
     this.speed_x = this.direction == 0 ? speed_x : -speed_x;
     this.pos_y = pos_y;
+    this.old_time_explotion_ovni = new Date().getTime();
   }
   move() {
     this.pos_x += this.speed_x;
