@@ -13,6 +13,11 @@ const ctx = canvas.getContext("2d");
 let player = new Player();
 let scene = new SceneInvaders(5000);
 let enemyMatrix = new EnemyMatrix();
+let directionMatrix = 1;
+
+// Step movement of enemies
+let old_enemy_step_time = new Date().getTime();
+let skin = 1;
 
 document.fonts.ready.then(() => {
   function update() {
@@ -25,6 +30,14 @@ document.fonts.ready.then(() => {
     scene.enable_explotion_ovni();
     scene.update_score(ctx);
     enemyMatrix.update(ctx);
+    let current_enemy_step_time = new Date().getTime();
+    if (current_enemy_step_time - old_enemy_step_time > 400) {
+      enemyMatrix.move(canvas.width);
+      old_enemy_step_time = current_enemy_step_time;
+      skin *= -1;
+      enemyMatrix.change_skin(skin);
+    }
+    console.log(directionMatrix);
     requestAnimationFrame(update);
   }
   requestAnimationFrame(update);
