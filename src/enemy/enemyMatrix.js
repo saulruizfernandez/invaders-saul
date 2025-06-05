@@ -26,6 +26,16 @@ export class EnemyMatrix {
   kill_allien(x, y) {
     this.matrix[x][y] = "k";
   }
+
+  down(i, j) {
+    for (let k = i + 1; k < this.matrix.length; k++) {
+      if (this.matrix[k][j] != "k" && this.matrix[k][j] != "e") {
+        return true;
+      }
+    }
+    return false;
+  }
+
   update(ctx) {
     let current_row = 160;
     for (let i = 0; i < this.matrix.length; i++) {
@@ -85,7 +95,7 @@ export class EnemyMatrix {
       current_row += this.row_spacing;
     }
   }
-  move(canva_width) {
+  move(canva_width, counter_enemies_killed) {
     let should_change_direction = false;
     let leftmost = Infinity;
     let rightmost = -Infinity;
@@ -114,7 +124,8 @@ export class EnemyMatrix {
     for (let i = 0; i < this.matrix.length; i++) {
       for (let j = 0; j < this.matrix[0].length; j++) {
         if (this.enemy_matrix[i][j]) {
-          this.enemy_matrix[i][j].pos_x += this.speed * this.direction;
+          this.enemy_matrix[i][j].pos_x +=
+            (this.speed + counter_enemies_killed / 2) * this.direction;
         }
       }
     }

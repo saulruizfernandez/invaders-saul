@@ -23,6 +23,7 @@ export class Player {
     this.height = height;
     this.last_shoot_time = new Date().getTime();
     this.shooting_interval = 350; // Shooting frequency
+    this.lifes = 3;
   }
 
   show(ctx) {

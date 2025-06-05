@@ -1,5 +1,12 @@
+body {
+  background-color: black;
+}
+
 #game_canvas {
   background-color: black;
+  border: 5px solid white;
+  border-bottom: 10px solid #00ff1a;
+  border-radius: 10px;
 }
 
 .press-start-2p-regular {

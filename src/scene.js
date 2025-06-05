@@ -1,4 +1,5 @@
 import { EnemyOvni } from "./enemy/enemy.js";
+import { Projectile } from "./enemy/projectile.js";
 
 export class SceneInvaders {
   constructor(ovni_time_appearance) {
@@ -93,6 +94,66 @@ export class SceneInvaders {
     ctx.font = "30px 'Press Start 2P'";
     ctx.fillStyle = "white";
     ctx.fillText("SCORE <1>", 20, 50);
-    ctx.fillText(this.score, 20, 90);
+    ctx.fillText(this.score, 310, 50);
+  }
+
+  update_lifes(ctx, player_lifes) {
+    ctx.font = "30px 'Press Start 2P'";
+    ctx.fillStyle = "white";
+    ctx.fillText("LIFES <2>", 650, 50);
+    // Draw three player sprites with their id to represent lifes
+    let player_sprite = new Image();
+    player_sprite.src = "sprites/player_sprite.png";
+    for (let i = 0; i < player_lifes; i++) {
+      ctx.drawImage(player_sprite, 940 + i * 80, 10, 64, 34);
+    }
+  }
+
+  enable_enemy_projectile(enemyMatrix, projectileArray, enemies_killed) {
+    // Store in array the positions of the alive enemies that do not have any enemy down
+    let enemy_positions = [];
+    for (let i = 0; i < enemyMatrix.matrix.length; i++) {
+      for (let j = 0; j < enemyMatrix.matrix[0].length; j++) {
+        if (
+          enemyMatrix.enemy_matrix[i][j] &&
+          (enemyMatrix.matrix[i][j] != "k" ||
+            enemyMatrix.matrix[i][j] != "e") &&
+          !enemyMatrix.down(i, j)
+        ) {
+          enemy_positions.push([
+            enemyMatrix.enemy_matrix[i][j].pos_x,
+            enemyMatrix.enemy_matrix[i][j].pos_y,
+          ]);
+        }
+      }
+    }
+    // Each enemy can shoot a projectile at any time with random probability
+    for (let i = 0; i < enemy_positions.length; i++) {
+      if (Math.random() < 0.0001 * enemies_killed + 0.0004) {
+        // Adjust the probability as needed
+        let x = enemy_positions[i][0] + 30; // Center of the enemy
+        let y = enemy_positions[i][1] + 50; // Center of the enemy
+        let speed = 2; // Adjust the speed as needed
+        let projectile = null;
+        if (Math.round(Math.random())) {
+          projectile = new Projectile(
+            "sprites/projectil2_1.png",
+            "sprites/projectil2_2.png",
+            x,
+            y,
+            speed
+          );
+        } else {
+          projectile = new Projectile(
+            "sprites/projectil1_1.png",
+            "sprites/projectil1_2.png",
+            x,
+            y,
+            speed
+          );
+        }
+        projectileArray.push(projectile);
+      }
+    }
   }
 }
