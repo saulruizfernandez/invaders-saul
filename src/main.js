@@ -48,16 +48,18 @@ function handlePlayerDeathAnimation() {
 
 document.fonts.ready.then(() => {
   function update() {
-    player.enable_move(keys);
-    player.enable_shoot(keys, scene.projectile_player_array);
     ctx.clearRect(0, 0, canvas.width, canvas.height); // Refresh screen
     player.show(ctx);
-    scene.enable_ovni(ctx, canvas.width);
-    scene.enable_player_projectile_interaction(
-      ctx,
-      enemyMatrix,
-      enemies_killed
-    );
+    if (!player_dying && player.lifes > 0) {
+      player.enable_move(keys);
+      player.enable_shoot(keys, scene.projectile_player_array);
+      scene.enable_ovni(ctx, canvas.width);
+      scene.enable_player_projectile_interaction(
+        ctx,
+        enemyMatrix,
+        enemies_killed
+      );
+    }
     for (let i = 0; i < enemies_killed.length; i++) {
       if (new Date().getTime() - enemies_killed[i][2] > 100) {
         enemyMatrix.matrix[enemies_killed[i][0]][enemies_killed[i][1]] = "k";
@@ -68,51 +70,90 @@ document.fonts.ready.then(() => {
     scene.enable_explotion_ovni();
     scene.update_score(ctx);
     scene.update_lifes(ctx, player.lifes);
-    enemyMatrix.update(ctx);
+    if (player.lifes > 0) {
+      enemyMatrix.update(ctx);
+    }
     if (player_dying) {
       handlePlayerDeathAnimation();
 
       // Check if death animation should end
       if (new Date().getTime() - player_death_time > 2000) {
         player_dying = false;
-        player.sprite.src = "sprites/player_sprite.png";
+        if (player.lifes > 0) {
+          player.sprite.src = "sprites/player_sprite.png";
+          player.x = 30;
+        }
       }
     }
     let current_enemy_step_time = new Date().getTime();
-    if (
-      current_enemy_step_time - old_enemy_step_time >
-      400 - counter_enemies_killed * 3
-    ) {
-      enemyMatrix.move(canvas.width, counter_enemies_killed);
-      old_enemy_step_time = current_enemy_step_time;
-      skin *= -1;
-      enemyMatrix.change_skin(skin);
-    }
-    scene.enable_enemy_projectile(
-      enemyMatrix,
-      enemy_projectiles,
-      counter_enemies_killed
-    );
-    for (let i = enemy_projectiles.length - 1; i >= 0; i--) {
-      let projectile = enemy_projectiles[i];
-      if (projectile.y < canvas.height) {
-        projectile.draw(ctx);
-        projectile.move();
-      } else {
-        enemy_projectiles.splice(i, 1); // Eliminates projectile
-      }
+    if (!player_dying && player.lifes > 0) {
       if (
-        projectile.y > player.y &&
-        projectile.x > player.x &&
-        projectile.x < player.x + player.width
+        current_enemy_step_time - old_enemy_step_time >
+        400 - counter_enemies_killed * 3
       ) {
-        enemy_projectiles.splice(i, 1);
-        player.lifes--;
-        player.sprite.src = "sprites/player_death_1.png";
-        player_dying = true;
-        player_death_time = new Date().getTime();
-        death_animation_time = player_death_time;
+        enemyMatrix.move(canvas.width, counter_enemies_killed);
+        old_enemy_step_time = current_enemy_step_time;
+        skin *= -1;
+        enemyMatrix.change_skin(skin);
       }
+      scene.enable_enemy_projectile(
+        enemyMatrix,
+        enemy_projectiles,
+        counter_enemies_killed
+      );
+      for (let i = enemy_projectiles.length - 1; i >= 0; i--) {
+        let projectile = enemy_projectiles[i];
+        if (projectile.y < canvas.height) {
+          projectile.draw(ctx);
+          projectile.move();
+        } else {
+          enemy_projectiles.splice(i, 1); // Eliminates projectile
+        }
+        if (
+          projectile.y > player.y &&
+          projectile.x > player.x &&
+          projectile.x < player.x + player.width
+        ) {
+          enemy_projectiles.splice(i, 1);
+          player.lifes--;
+          player.sprite.src = "sprites/player_death_1.png";
+          player_dying = true;
+          player_death_time = new Date().getTime();
+          death_animation_time = player_death_time;
+        }
+      }
+    }
+    if (player.lifes <= 0) {
+      ctx.font = "60px 'Press Start 2P'";
+      ctx.fillStyle = "white";
+      ctx.fillText("GAME OVER", canvas.width / 2 - 250, canvas.height / 2 - 50);
+      ctx.font = "30px 'Press Start 2P'";
+      ctx.fillStyle = "#00ff1a";
+      ctx.fillText(
+        "Play again?",
+        canvas.width / 2 - 150,
+        canvas.height / 2 + 50
+      );
+      canvas.addEventListener("click", (event) => {
+        if (
+          event.clientX > canvas.width / 2 - 150 &&
+          event.clientX < canvas.width / 2 + 150 &&
+          event.clientY > canvas.height / 2 + 20 &&
+          event.clientY < canvas.height / 2 + 80
+        ) {
+          // Reset game state
+          player = new Player();
+          scene = new SceneInvaders(5000);
+          enemyMatrix = new EnemyMatrix();
+          directionMatrix = 1;
+          old_enemy_step_time = new Date().getTime();
+          skin = 1;
+          enemies_killed = [];
+          counter_enemies_killed = 0;
+          enemy_projectiles = [];
+          player_dying = false;
+        }
+      });
     }
     console.log(directionMatrix);
     requestAnimationFrame(update);
