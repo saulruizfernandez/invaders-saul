@@ -33,7 +33,13 @@ export class SceneInvaders {
       }
     }
   }
-  enable_player_projectile_interaction(ctx, enemy_matrix, enemies_killed) {
+  enable_player_projectile_interaction(
+    ctx,
+    enemy_matrix,
+    enemies_killed,
+    shields,
+    hit_shield
+  ) {
     for (let i = this.projectile_player_array.length - 1; i >= 0; i--) {
       const element = this.projectile_player_array[i];
       if (element.pos_y > 0) {
@@ -87,7 +93,41 @@ export class SceneInvaders {
           }
         }
       }
+      // Check if projectile hits shields
+      for (let shield of shields) {
+        for (let l = 0; l < shield.matrix.length; l++) {
+          for (let j = 0; j < shield.matrix[0].length; j++) {
+            if (
+              shield.matrix[l][j] === 1 &&
+              element.pos_y < shield.y + l * 7 + 7 &&
+              element.pos_y + element.height > shield.y + l * 7 &&
+              element.pos_x + element.width > shield.x + j * 7 &&
+              element.pos_x < shield.x + j * 7 + 7
+            ) {
+              this.projectile_player_array.splice(i, 1); // Eliminates projectile
+              shield.matrix[l][j] = 0; // Destroys the pixel
+              hit_shield = true;
+              for (let p = l - 3; p < l + 3; p++) {
+                if (p >= 0 && p < shield.matrix.length) {
+                  // Check if p is within bounds
+                  for (let q = j - 3; q < j + 3; q++) {
+                    if (q >= 0 && q < shield.matrix[p].length) {
+                      // Check if q is within bounds
+                      if (shield.matrix[p][q]) {
+                        if (Math.random() < 0.5) {
+                          shield.matrix[p][q] = 0; // Randomly destroy nearby pixels
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
+    return hit_shield;
   }
   enable_explotion_ovni() {
     if (this.ovni_explotion_time) {

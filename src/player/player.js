@@ -39,15 +39,20 @@ export class Player {
     if (this.x > 1099) this.x = 1099;
   }
 
-  enable_shoot(keys, projectile_player_array) {
+  enable_shoot(keys, projectile_player_array, hit_shield) {
     if (keys[" "]) {
       let current_time = new Date().getTime();
-      if (current_time - this.last_shoot_time > this.shooting_interval) {
+      if (
+        current_time - this.last_shoot_time > this.shooting_interval ||
+        hit_shield
+      ) {
         const shoot_sound = new Audio("sounds/shoot.wav");
         shoot_sound.play();
         projectile_player_array.push(new Projectile(this.x + 45.5));
         this.last_shoot_time = current_time;
+        hit_shield = false;
       }
+      return hit_shield;
     }
   }
 }

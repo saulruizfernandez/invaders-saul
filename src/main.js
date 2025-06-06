@@ -32,6 +32,8 @@ let player_dying = false;
 let player_death_time;
 let death_animation_time;
 
+let hit_shield = false;
+
 // Shields
 const shields = [
   new Shield(100, 600),
@@ -61,12 +63,14 @@ document.fonts.ready.then(() => {
     }
     if (!player_dying && player.lifes > 0) {
       player.enable_move(keys);
-      player.enable_shoot(keys, scene.projectile_player_array);
+      hit_shield = player.enable_shoot(keys, scene.projectile_player_array, hit_shield);
       scene.enable_ovni(ctx, canvas.width);
-      scene.enable_player_projectile_interaction(
+      hit_shield = scene.enable_player_projectile_interaction(
         ctx,
         enemyMatrix,
-        enemies_killed
+        enemies_killed,
+        shields,
+        hit_shield
       );
     }
     for (let i = 0; i < enemies_killed.length; i++) {
@@ -112,6 +116,7 @@ document.fonts.ready.then(() => {
         enemy_projectiles,
         counter_enemies_killed
       );
+
       for (let i = enemy_projectiles.length - 1; i >= 0; i--) {
         let projectile = enemy_projectiles[i];
         if (projectile.y < canvas.height) {
