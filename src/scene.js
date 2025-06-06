@@ -149,7 +149,7 @@ export class SceneInvaders {
   update_lifes(ctx, player_lifes) {
     ctx.font = "30px 'Press Start 2P'";
     ctx.fillStyle = "white";
-    ctx.fillText("LIFES <2>", 650, 50);
+    ctx.fillText("LIVES <2>", 650, 50);
     // Draw three player sprites with their id to represent lifes
     let player_sprite = new Image();
     player_sprite.src = "sprites/player_sprite.png";
