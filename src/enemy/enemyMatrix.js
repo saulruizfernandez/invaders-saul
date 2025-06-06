@@ -22,6 +22,7 @@ export class EnemyMatrix {
     this.speed = 10;
     this.direction = 1;
     this.pos_x;
+    this.total_enemies = this.enemy_matrix.length * this.enemy_matrix[0].length;
   }
   kill_allien(x, y) {
     this.matrix[x][y] = "k";
