@@ -35,7 +35,7 @@ let hit_shield = false;
 let gameState = "menu";
 
 // Shields
-const shields = [
+let shields = [
   new Shield(100, 600),
   new Shield(400, 600),
   new Shield(700, 600),
@@ -66,7 +66,7 @@ document.fonts.ready.then(() => {
       // Dibujar el menú principal
       ctx.font = "60px 'Press Start 2P'";
       ctx.fillStyle = "white";
-      ctx.fillText("MARTIAN INVASORS", 130, 250);
+      ctx.fillText("MARTIAN INVADERS", 120, 250);
 
       const e1 = new Image();
       e1.src = "sprites/enemy1_1.png";
@@ -278,6 +278,13 @@ document.fonts.ready.then(() => {
             enemies_killed = [];
             counter_enemies_killed = 0;
             enemy_projectiles = [];
+            shields = [];
+            shields.push(
+              new Shield(100, 600),
+              new Shield(400, 600),
+              new Shield(700, 600),
+              new Shield(1000, 600)
+            );
             player_dying = false;
           }
         });
