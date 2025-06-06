@@ -18,6 +18,8 @@ export class SceneInvaders {
       this.ovni_time_appearance
     ) {
       this.ovni = new EnemyOvni();
+      const shoot_sound = new Audio("sounds/ufo_lowpitch.wav");
+      shoot_sound.play();
       this.last_time_ovni_appeared = current_time_ovni;
     }
     if (this.ovni) {
@@ -48,6 +50,8 @@ export class SceneInvaders {
         ) {
           this.projectile_player_array.splice(i, 1); // Eliminates projectile
           this.score += Math.floor(Math.random() * 100);
+          const shoot_sound = new Audio("sounds/invaderkilled.wav");
+          shoot_sound.play();
           this.ovni.set_img_src("sprites/enemy_ovni_explotion.png");
           this.ovni.set_width(65);
           this.ovni.set_height(65);
@@ -55,21 +59,26 @@ export class SceneInvaders {
           this.ovni_explotion_time = new Date().getTime();
         }
       }
+      let block_multiple_kill = false;
       for (let j = 0; j < enemy_matrix.matrix.length; j++) {
         for (let k = 0; k < enemy_matrix.matrix[0].length; k++) {
           if (enemy_matrix.enemy_matrix[j][k]) {
             if (
+              !block_multiple_kill &&
               element.pos_y < enemy_matrix.enemy_matrix[j][k].pos_y &&
               element.pos_x > enemy_matrix.enemy_matrix[j][k].pos_x &&
               element.pos_x <
                 enemy_matrix.enemy_matrix[j][k].pos_x +
                   enemy_matrix.enemy_matrix[j][k].width
             ) {
+              block_multiple_kill = true; // Avoids multiple kills with the same projectile
               this.projectile_player_array.splice(i, 1); // Eliminates projectile
               this.score += enemy_matrix.enemy_matrix[j][k].points;
               enemy_matrix.enemy_matrix[j][k].set_img_src(
                 "sprites/enemy_normal_explotion.png"
               );
+              const kill_sound = new Audio("sounds/invaderkilled.wav");
+              kill_sound.play();
               enemy_matrix.matrix[j][k] = "e"; // Exploding
               enemy_matrix.enemy_matrix[j][k].set_width(65);
               enemy_matrix.enemy_matrix[j][k].set_height(65);

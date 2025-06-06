@@ -43,6 +43,8 @@ export class Player {
     if (keys[" "]) {
       let current_time = new Date().getTime();
       if (current_time - this.last_shoot_time > this.shooting_interval) {
+        const shoot_sound = new Audio("sounds/shoot.wav");
+        shoot_sound.play();
         projectile_player_array.push(new Projectile(this.x + 45.5));
         this.last_shoot_time = current_time;
       }
